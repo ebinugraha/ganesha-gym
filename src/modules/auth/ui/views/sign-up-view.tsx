@@ -19,8 +19,17 @@ import { Button } from "@/components/ui/button";
 
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Loader2, TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const SignUpView = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof signUpSchemas>>({
     resolver: zodResolver(signUpSchemas),
     defaultValues: {
@@ -32,8 +41,48 @@ export const SignUpView = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof signInSchemas>) => {
-    console.log(data);
+  const onSubmit = (data: z.infer<typeof signUpSchemas>) => {
+    setIsLoading(true);
+    setError(null);
+    authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          setError(null);
+          router.push("/sign-in");
+        },
+        onError: ({ error }) => {
+          setIsLoading(false);
+          setError(error.message);
+        },
+      }
+    );
+  };
+
+  const onGoogleSignUp = () => {
+    setIsLoading(true);
+    setError(null);
+    authClient.signIn.social(
+      {
+        provider: "google",
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setIsLoading(false);
+          setError(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -68,6 +117,7 @@ export const SignUpView = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={isLoading}
                           type="text"
                           placeholder="John doe"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
@@ -88,6 +138,7 @@ export const SignUpView = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={isLoading}
                           type="number"
                           placeholder="08123456789"
                           className="glass border-white/20 text-white placeholder:text-gray-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
@@ -107,6 +158,7 @@ export const SignUpView = () => {
                       <FormLabel className="text-white ">Email</FormLabel>
                       <FormControl>
                         <Input
+                          disabled={isLoading}
                           type="email"
                           placeholder="ex: user123@gmail.com"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
@@ -125,6 +177,7 @@ export const SignUpView = () => {
                       <FormLabel className="text-white ">Password</FormLabel>
                       <FormControl>
                         <Input
+                          disabled={isLoading}
                           type="password"
                           placeholder="••••••••"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
@@ -145,6 +198,7 @@ export const SignUpView = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
+                          disabled={isLoading}
                           type="password"
                           placeholder="Masukan ulang password"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
@@ -155,8 +209,21 @@ export const SignUpView = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" variant={"glass"}>
-                  Sign-in
+                {!!error && (
+                  <Alert
+                    variant={"destructive"}
+                    className="bg-destructive/10 border-none"
+                  >
+                    <TriangleAlert className="text-destructive!" />
+                    <AlertTitle>{error}!</AlertTitle>
+                  </Alert>
+                )}
+                <Button type="submit" variant={"glass"} disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "Register"
+                  )}
                 </Button>
               </form>
             </Form>
@@ -167,7 +234,11 @@ export const SignUpView = () => {
               <div className="w-full h-[0.2px] bg-muted-foreground" />
             </div>
             <div className="flex flex-col gap-3">
-              <Button className="w-full" variant={"outline"}>
+              <Button
+                className="w-full"
+                variant={"outline"}
+                onClick={onGoogleSignUp}
+              >
                 <FcGoogle />
                 Google
               </Button>

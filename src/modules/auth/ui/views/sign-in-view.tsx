@@ -19,8 +19,17 @@ import { Button } from "@/components/ui/button";
 
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { Loader2, TriangleAlert } from "lucide-react";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 export const SignInView = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof signInSchemas>>({
     resolver: zodResolver(signInSchemas),
     defaultValues: {
@@ -30,7 +39,44 @@ export const SignInView = () => {
   });
 
   const onSubmit = (data: z.infer<typeof signInSchemas>) => {
-    console.log(data);
+    setIsLoading(true);
+    setError(null);
+    authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          router.push("/");
+        },
+        onError: () => {
+          setIsLoading(false);
+          setError("Email atau password salah");
+        },
+      }
+    );
+  };
+
+  const onGoogleSignIn = () => {
+    setIsLoading(true);
+    setError(null);
+    authClient.signIn.social(
+      {
+        provider: "google",
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setIsLoading(false);
+          setError(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -52,7 +98,7 @@ export const SignInView = () => {
             {/* form */}
             <Form {...form}>
               <form
-                className="flex flex-col gap-y-6"
+                className="flex flex-col gap-y-4"
                 onSubmit={form.handleSubmit(onSubmit)}
               >
                 <FormField
@@ -64,6 +110,7 @@ export const SignInView = () => {
                       <FormControl>
                         <Input
                           type="email"
+                          disabled={isLoading}
                           placeholder="ex: user123@gmail.com"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
                           {...field}
@@ -82,6 +129,7 @@ export const SignInView = () => {
                       <FormControl>
                         <Input
                           type="password"
+                          disabled={isLoading}
                           placeholder="••••••••"
                           className="glass border-white/20 text-white placeholder:text-gray-400"
                           {...field}
@@ -91,8 +139,17 @@ export const SignInView = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" variant={"glass"}>
-                  Sign-in
+                {!!error && (
+                  <Alert
+                    variant={"destructive"}
+                    className="bg-destructive/10 border-none"
+                  >
+                    <TriangleAlert className="text-destructive!" />
+                    <AlertTitle>{error}!</AlertTitle>
+                  </Alert>
+                )}
+                <Button type="submit" variant={"glass"} disabled={isLoading}>
+                  {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
                 </Button>
               </form>
             </Form>
@@ -103,7 +160,11 @@ export const SignInView = () => {
               <div className="w-full h-[0.2px] bg-muted-foreground" />
             </div>
             <div className="flex flex-col gap-3">
-              <Button className="w-full" variant={"outline"}>
+              <Button
+                className="w-full"
+                variant={"outline"}
+                onClick={onGoogleSignIn}
+              >
                 <FcGoogle />
                 Google
               </Button>
