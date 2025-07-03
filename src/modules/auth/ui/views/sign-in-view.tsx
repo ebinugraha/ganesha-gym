@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signInSchemas } from "../../types";
+import { Loader2, TriangleAlert } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -19,8 +20,16 @@ import { Button } from "@/components/ui/button";
 
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 export const SignInView = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof signInSchemas>>({
     resolver: zodResolver(signInSchemas),
     defaultValues: {
@@ -30,7 +39,24 @@ export const SignInView = () => {
   });
 
   const onSubmit = (data: z.infer<typeof signInSchemas>) => {
-    console.log(data);
+    setError(null);
+    setIsLoading(true);
+    authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setIsLoading(false);
+          setError(error.message);
+        },
+      }
+    );
   };
 
   return (
@@ -91,8 +117,17 @@ export const SignInView = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" variant={"glass"}>
-                  Sign-in
+                {!!error && (
+                  <Alert
+                    variant={"destructive"}
+                    className="bg-destructive/10 border-none"
+                  >
+                    <TriangleAlert className="text-destructive!" />
+                    <AlertTitle>{error}!</AlertTitle>
+                  </Alert>
+                )}
+                <Button type="submit" variant={"glass"} disabled={isLoading}>
+                  {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
                 </Button>
               </form>
             </Form>
