@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,10 @@ export const DashboardUserButton = () => {
   const { data, isPending } = authClient.useSession();
 
   if (!data || !data.user) {
-    return <p>loading...</p>;
+    return <Skeleton className="h-15 w-full rounded-md" />;
+
+
+    
   }
 
   const onLogout = () => {
