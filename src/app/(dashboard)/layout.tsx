@@ -1,4 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardNavbar } from "@/modules/dashboard/ui/components/dashboard-navbar";
 import { DashboardSidebar } from "@/modules/dashboard/ui/components/dashboard-sidebar";
 
 interface Props {
@@ -8,9 +9,12 @@ interface Props {
 const DashboardLayout = ({ children }: Props) => {
   return (
     <>
-      <SidebarProvider className="bg-gradient-to-br from-gray-900 via-black to-gray-900">   
-        <DashboardSidebar/>
-        <main>{children}</main>
+      <SidebarProvider className="bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <DashboardSidebar />
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <DashboardNavbar />
+          {children}
+        </main>
       </SidebarProvider>
     </>
   );

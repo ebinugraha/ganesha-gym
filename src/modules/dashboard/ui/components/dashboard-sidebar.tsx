@@ -88,7 +88,7 @@ export const DashboardSidebar = () => {
                         <span className="absolute left-0 top-0 h-full w-1 rounded-l-md bg-gradient-to-b from-blue-500 to-purple-500" />
                       )}
                       <data.icons
-                        style={{ width: "20px", height: "20px" }}
+                        style={{ width: "18px", height: "18px" }}
                         className={cn(
                           pathname === data.href && "text-blue-500"
                         )}
