@@ -13,6 +13,8 @@ const badgeVariants = cva(
           "border border-green-500 bg-green-500/20 text-green-500 hover:bg-green-500/30",
         secondary:
           "border border-blue-500 bg-blue-500/20 text-blue-500 hover:bg-blue-500/30",
+          purple: "border border-purple-500 bg-purple-500/20 text-purple-500 hover:bg-purple-500/30",
+          gray: "border border-gray-500 bg-gray-500/20 text-gray-500 hover:bg-gray-500/30",
         destructive:
           "border border-red-500 bg-red-500/20 text-red-500 hover:bg-red-500/30",
         outline:

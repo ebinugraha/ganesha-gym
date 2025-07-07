@@ -25,7 +25,7 @@ export const FiltersUsers = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="glass border-white/20 text-white h-9 px-4 flex items-center gap-x-2">
-                Filter 1
+                Status
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" className="w-72">
@@ -35,8 +35,16 @@ export const FiltersUsers = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="glass border-white/20 text-white h-9 px-4 flex items-center gap-x-2">
-                Filter 1
+                Paket
               </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" side="bottom" className="w-72">
+              <DropdownMenuItem>test</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="glass border-white/20 text-white h-9 px-4 flex items-center gap-x-2"></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" side="bottom" className="w-72">
               <DropdownMenuItem>test</DropdownMenuItem>

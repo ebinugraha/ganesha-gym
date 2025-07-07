@@ -1,40 +1,114 @@
 import { GenerateAvatar } from "@/components/generate-avatar";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card"; // CardFooter was imported but not used
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import { Calendar, Clock, MapPin, MoreVertical, Phone } from "lucide-react";
 
+// ---
+// Interfaces
+// ---
 interface UserCardProps {
   image?: string;
   name: string;
   active: boolean;
   email: string;
-  tipe: string;
+  tipe: "VIP" | "Premium" | "Reguler"; // Define possible values for 'tipe'
+  membership?: "Bulanan" | "Tahunan" | "Harian"; // Define possible values for 'membership'
+  totalPertemuan?: number;
   phoneNumber?: string;
   tanggalBergabung?: string;
   lokasi?: string;
   terakhirCheckIn?: string;
 }
 
+// ---
+// Helper Components (Optional but good for complex sections)
+// ---
+
+// This could be a separate file, e.g., components/user-card-detail-item.tsx
+interface UserDetailItemProps {
+  icon: React.ElementType; // Use React.ElementType for Lucide icons
+  value?: string | number;
+}
+
+const UserDetailItem = ({ icon: Icon, value }: UserDetailItemProps) => {
+  if (!value) return null; // Don't render if there's no value
+
+  return (
+    <span className="text-xs text-muted-foreground flex items-center gap-2">
+      <Icon size={12} />
+      {value}
+    </span>
+  );
+};
+
+// This could be a separate file, e.g., components/user-status-badges.tsx
+interface UserStatusBadgesProps {
+  active: boolean;
+  membership?: UserCardProps["membership"];
+}
+
+const UserStatusBadges = ({ active, membership }: UserStatusBadgesProps) => {
+  const getMembershipVariant = (memberType?: UserCardProps["membership"]) => {
+    switch (memberType) {
+      case "Bulanan":
+        return "secondary";
+      case "Tahunan":
+        return "purple"; // Assuming you have a 'purple' variant defined in your badge component
+      case "Harian":
+        return "gray"; // Assuming you have a 'gray' variant defined
+      default:
+        return "default"; // Fallback
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between w-full">
+      <Badge variant={active ? "default" : "destructive"}>
+        {active ? "Aktif" : "Tidak Aktif"}
+      </Badge>
+      {membership && ( // Only render membership badge if membership is provided
+        <Badge variant={getMembershipVariant(membership)}>
+          {membership}
+        </Badge>
+      )}
+    </div>
+  );
+};
+
+// ---
+// Main Component
+// ---
 export const UserCard = ({
   image,
   name,
   active,
   email,
   tipe,
+  membership,
   phoneNumber,
   tanggalBergabung,
+  totalPertemuan = 0,
   lokasi,
   terakhirCheckIn,
 }: UserCardProps) => {
+  const getTipeColorClass = (userTipe: UserCardProps["tipe"]) => {
+    switch (userTipe) {
+      case "VIP":
+        return "text-yellow-500";
+      case "Premium":
+        return "text-purple-500";
+      case "Reguler":
+        return "text-gray-500";
+      default:
+        return "text-gray-500"; // Default case for safety
+    }
+  };
+
   return (
-    <Card className="flex flex-col p-4 glass-card text-white hover:border-gray-500 transition-colors duration-300">
+    <Card className="flex flex-col p-4 glass-card text-white hover:border-gray-500 overflow-hidden transition-colors duration-300">
       <CardHeader className="flex items-center justify-between w-full p-0">
         <div className="flex gap-x-4 items-center">
           {image ? (
@@ -48,10 +122,8 @@ export const UserCard = ({
               className="w-6 h-6"
             />
           )}
-          <div className="flex flex-col gap-1 overflow-hidden flex-1 min-w-0 text-left">
-            <span className="text-sm font-semibold truncate w-full">
-              {name}
-            </span>
+          <div className="flex flex-col gap-1 overflow-hidden text-left">
+            <span className="text-sm font-semibold truncate">{name}</span>
             <span className="text-xs text-muted-foreground font-normal truncate w-full">
               {email}
             </span>
@@ -62,44 +134,33 @@ export const UserCard = ({
           className="text-muted-foreground hover:text-white transition-colors duration-300"
         />
       </CardHeader>
+
       <CardContent className="flex flex-col gap-y-5 p-0">
-        <div className="flex items-center justify-between w-full">
-          <Badge>{active ? "Aktif" : "Tidak Aktif"}</Badge>
-          <Badge variant={"secondary"}>{tipe}</Badge>
-        </div>
+        <UserStatusBadges active={active} membership={membership} />
+
         <div className="flex flex-col gap-y-2">
           <div className="flex items-center justify-between w-full">
-            <span className="text-sm text-muted-foreground flex items-center gap-2">
-              <Phone size={12} />
-              {phoneNumber}
-            </span>
-            <span className="text-sm text-muted-foreground flex items-center gap-2">
-              <Calendar size={12} />
-              {tanggalBergabung}
-            </span>
+            <UserDetailItem icon={Phone} value={phoneNumber} />
+            <UserDetailItem icon={Calendar} value={tanggalBergabung} />
           </div>
           <div className="flex items-center justify-between w-full">
-            <span className="text-sm text-muted-foreground flex items-center gap-2">
-              <Clock size={12} />
-              {terakhirCheckIn}
-            </span>
-            <span className="text-sm text-muted-foreground flex items-center gap-2">
-              <MapPin size={12} />
-              {lokasi}
-            </span>
+            <UserDetailItem icon={Clock} value={terakhirCheckIn} />
+            <UserDetailItem icon={MapPin} value={lokasi} />
           </div>
         </div>
-        <Separator className="" />
+
+        <Separator />
+
         <div className="flex w-full flex-col gap-y-1">
           <div className="flex items-center justify-between w-full">
-            <span className="text-lg font-semibold">70</span>
-            <span className="text-lg text-purple-500 font-semibold">
+            <span className="text-lg font-semibold">{totalPertemuan}</span>
+            <span className={cn("text-lg font-semibold", getTipeColorClass(tipe))}>
               {tipe}
             </span>
           </div>
           <div className="flex items-center justify-between w-full">
-            <span className="text-xs text-muted-foreground">70</span>
-            <span className="text-xs text-muted-foreground">{tipe}</span>
+            <span className="text-xs text-muted-foreground">Pertemuan</span>
+            <span className="text-xs text-muted-foreground">Paket</span>
           </div>
         </div>
       </CardContent>
