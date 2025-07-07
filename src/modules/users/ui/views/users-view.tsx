@@ -2,7 +2,7 @@
 
 import { InfoCard } from "@/components/info-card";
 import { UsersHeaders } from "../components/users-headers";
-import { SearchIcon, Users } from "lucide-react";
+import { SearchIcon, UserCheck, UserPlus, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -29,18 +29,21 @@ export const UsersView = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <InfoCard
             title="Total Member"
-            value="150"
+            value="156"
+            description="+12% dari bulan lalu"
             icon={<Users className="text-blue-500" />}
           />
           <InfoCard
-            title="Total Member"
-            value="150"
-            icon={<Users className="text-blue-500" />}
+            title="Member Aktif"
+            value="142"
+            description="91% dari total member"
+            icon={<UserCheck className="text-green-500" />}
           />
           <InfoCard
             title="Total Member"
-            value="150"
-            icon={<Users className="text-blue-500" />}
+            value="23"
+            description="Bulan ini"
+            icon={<UserPlus className="text-purple-500" />}
           />
         </div>
         {/* Users Filters */}

@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: Props) => {
         <DashboardSidebar />
         <main className="flex-1 flex flex-col overflow-hidden">
           <DashboardNavbar />
-          <div className="flex pt-15">{children}</div>
+          <div className="">{children}</div>
         </main>
       </SidebarProvider>
     </>
