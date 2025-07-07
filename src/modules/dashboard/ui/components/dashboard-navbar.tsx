@@ -13,7 +13,7 @@ export const DashboardNavbar = () => {
   return (
     <>
       <DashboardCommand open={isOpen} onOpenChange={setIsOpen} />
-      <nav className="flex items-center w-full justify-between px-5 py-3 glass border-0 border-b text-white">
+      <nav className="flex items-center w-full justify-between px-5 py-3 glass border-0 border-b text-white fixed">
         <div className="flex flex-col">
           <span className="font-semibold">
             {pathname === "/" && "Dashboard"}
