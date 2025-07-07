@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 export const memberRouter = createTRPCRouter({
   getMany: protectedProcedure.query(async ({ ctx }) => {
     const data = await db.select().from(user).where(eq(user.role, "user"));
-    console.log("Fetched members:", data);
     return data;
   }),
 });

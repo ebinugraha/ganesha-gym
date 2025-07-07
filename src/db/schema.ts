@@ -5,6 +5,7 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
+import { id } from "zod/v4/locales";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -65,6 +66,79 @@ export const verification = pgTable("verification", {
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const checkIn = pgTable("check_in", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  checkInTime: timestamp("check_in_time").notNull(),
+  checkOutTime: timestamp("check_out_time"),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const membership = pgTable("membership", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  membershipTypeId: text("membership_type_id")
+    .notNull()
+    .references(() => membershipType.id, { onDelete: "cascade" }),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const membershipType = pgTable("membership_type", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  price: integer("price").notNull(),
+  duration: integer("duration").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const membershipFacility = pgTable("membership_facility", {
+  id: text("id").primaryKey(),
+  membershipTypeId: text("membership_type_id")
+    .notNull()
+    .references(() => membershipType.id, { onDelete: "cascade" }),
+  facilityId: text("facility_id")
+    .notNull()
+    .references(() => facility.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const facility = pgTable("facility", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  image: text("image"),
   createdAt: timestamp("created_at").$defaultFn(
     () => /* @__PURE__ */ new Date()
   ),
