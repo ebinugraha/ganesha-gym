@@ -5,7 +5,7 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
-import { id } from "zod/v4/locales";
+import { nanoid } from "nanoid";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -75,7 +75,9 @@ export const verification = pgTable("verification", {
 });
 
 export const checkIn = pgTable("check_in", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -87,7 +89,9 @@ export const checkIn = pgTable("check_in", {
 });
 
 export const membership = pgTable("membership", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -105,7 +109,9 @@ export const membership = pgTable("membership", {
 });
 
 export const membershipType = pgTable("membership_type", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   name: text("name").notNull(),
   description: text("description"),
   price: integer("price").notNull(),
@@ -119,7 +125,9 @@ export const membershipType = pgTable("membership_type", {
 });
 
 export const membershipFacility = pgTable("membership_facility", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   membershipTypeId: text("membership_type_id")
     .notNull()
     .references(() => membershipType.id, { onDelete: "cascade" }),
@@ -135,10 +143,13 @@ export const membershipFacility = pgTable("membership_facility", {
 });
 
 export const facility = pgTable("facility", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
   name: text("name").notNull(),
   description: text("description"),
   image: text("image"),
+  category: text("category").notNull(),
   createdAt: timestamp("created_at").$defaultFn(
     () => /* @__PURE__ */ new Date()
   ),
