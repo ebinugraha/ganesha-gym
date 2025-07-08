@@ -1,8 +1,8 @@
+import { MembershipViews } from "@/modules/membership/ui/views/membership-views"
+
 const MembershipPage = () => {
     return (
-        <div>
-            
-        </div>
+        <MembershipViews/>
     )
 }
 

@@ -1,6 +1,7 @@
 import {
   Calendar,
   ChartColumn,
+  Crown,
   LayoutDashboard,
   Settings,
   Users,
@@ -29,17 +30,24 @@ export const listItemNav = [
     roles: ["admin", "user"],
   },
   {
-    icons: ChartColumn,
-    label: "Laporan",
-    href: "/reports",
-    description: "Buat laporan gym dan member",
-    roles: ["admin", "user"],
-  },
-  {
     icons: Calendar,
     label: "Check-in/out",
     href: "/check-in-out",
     description: "Monitor dan kelola aktivitas member",
+    roles: ["admin", "user"],
+  },
+  {
+    icons: Crown,
+    label: "Membership",
+    href: "/membership",
+    description: "Kelola membership dari member",
+    roles: ["admin", "user"],
+  },
+  {
+    icons: ChartColumn,
+    label: "Laporan",
+    href: "/reports",
+    description: "Buat laporan gym dan member",
     roles: ["admin", "user"],
   },
 ];
