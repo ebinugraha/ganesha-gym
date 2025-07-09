@@ -4,13 +4,35 @@ import {
   MAX_PAGE_SIZE,
   MIN_PAGE_SIZE,
 } from "@/constant";
-import { db } from "@/db";
-import { membershipType } from "@/db/schema";
+import db from "@/db";
+import { membershipFacility, membershipType, facility } from "@/db/schema"; // Pastikan facility diimpor
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { count } from "drizzle-orm";
+import { count, eq, getTableColumns, sql } from "drizzle-orm"; // Impor sql
 import { z } from "zod";
 
 export const membershipRouter = createTRPCRouter({
+  getOne: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await db
+        .select({
+          ...getTableColumns(membershipType),
+          facilities: sql`json_agg(${facility})`.as("facilities"),
+        })
+        .from(membershipType)
+        .leftJoin(
+          membershipFacility,
+          eq(membershipFacility.membershipTypeId, membershipType.id)
+        )
+        .leftJoin(facility, eq(membershipFacility.facilityId, facility.id))
+        .groupBy(membershipType.id);
+
+      return data;
+    }),
   getMany: protectedProcedure
     .input(
       z.object({
@@ -32,11 +54,21 @@ export const membershipRouter = createTRPCRouter({
         search: actualInput.search,
       };
 
-      const data = await db
-        .select()
-        .from(membershipType)
-        .limit(pageSize)
-        .offset((page - 1) * pageSize);
+      const data = await db.query.membershipType.findMany({
+        with: {
+          facilties: {
+            with: {
+              facility: true,
+            }
+          },
+        },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+
+      console.log(JSON.stringify(data, null, 2));
+
+
 
       const [total] = await db.select({ count: count() }).from(membershipType);
 

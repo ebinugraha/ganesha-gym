@@ -1,7 +1,10 @@
+import { Features } from "@/modules/membership/types";
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
   timestamp,
+  jsonb,
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
@@ -115,6 +118,8 @@ export const membershipType = pgTable("membership_type", {
   name: text("name").notNull(),
   description: text("description"),
   price: integer("price").notNull(),
+  active: boolean("active").notNull(),
+  features: jsonb("features").$type<Features>().notNull(),
   duration: integer("duration").notNull(),
   createdAt: timestamp("created_at").$defaultFn(
     () => /* @__PURE__ */ new Date()
@@ -123,6 +128,13 @@ export const membershipType = pgTable("membership_type", {
     () => /* @__PURE__ */ new Date()
   ),
 });
+
+export const membershipTypeRelation = relations(
+  membershipType,
+  ({ one, many }) => ({
+    facilties: many(membershipFacility),
+  })
+);
 
 export const membershipFacility = pgTable("membership_facility", {
   id: text("id")
@@ -157,3 +169,21 @@ export const facility = pgTable("facility", {
     () => /* @__PURE__ */ new Date()
   ),
 });
+
+export const facilityRelations = relations(facility, ({ many }) => ({
+  membershipTypes: many(membershipFacility),
+}));
+
+export const membershipFacilityRelations = relations(
+  membershipFacility,
+  ({ one }) => ({
+    membershipType: one(membershipType, {
+      fields: [membershipFacility.membershipTypeId],
+      references: [membershipType.id],
+    }),
+    facility: one(facility, {
+      fields: [membershipFacility.facilityId],
+      references: [facility.id],
+    }),
+  })
+);

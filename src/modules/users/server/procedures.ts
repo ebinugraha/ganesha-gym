@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import db from "@/db";
 import { user } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { eq } from "drizzle-orm";
