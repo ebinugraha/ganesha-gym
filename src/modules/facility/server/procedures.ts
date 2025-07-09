@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constant";
-import { db } from "@/db";
+import  db from "@/db";
 import { facility, membershipFacility } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";

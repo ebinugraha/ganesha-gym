@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 interface Props {
   color: string;
   name: string;
-  description: string;
+  description: string | null;
   priority: number;
   isActive: boolean;
-  price: string;
+  price: string | number;
   benefits: string[];
   facilities: string[];
 }
@@ -28,8 +28,11 @@ export const MembershipCard = ({
     <div className="flex flex-col rounded-lg gap-y-4 glass p-4 text-white">
       <div className="flex flex-row items-center justify-between w-full">
         <div className="flex gap-x-5 items-center">
-          <div className="p-2 rounded-xl border-1 bg-yellow-500/20 h-10 w-10 border-yellow-500 flex item-center justify-center">
-            <Crown className="text-yellow-500" />
+          <div
+            style={{ backgroundColor: `${color}33`, borderColor: `${color}` }}
+            className="p-2 rounded-xl border-1 bg-yellow-500/20 h-10 w-10 border-yellow-500 flex item-center justify-center"
+          >
+            <Crown style={{ color: `${color}` }} />
           </div>
           <div className="flex flex-col">
             <span className="text-sm">{name}</span>
@@ -66,7 +69,11 @@ export const MembershipCard = ({
         <span>Akses fasilitas :</span>
         <div className="flex flex-1 flex-wrap gap-x-2">
           {facilities.map((facilitiy) => (
-            <BadgeComponent variant={"outline"} className="text-white">
+            <BadgeComponent
+              key={facilitiy}
+              variant={"outline"}
+              className="text-white"
+            >
               {facilitiy}
             </BadgeComponent>
           ))}
