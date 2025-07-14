@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
-import { useState } from "react";
 import { MembershipGetOne } from "../../types";
 
 interface Props {
