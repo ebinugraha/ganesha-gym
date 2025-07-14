@@ -7,4 +7,6 @@ export interface Features {
 }
 
 export type MembershipGetMany =
-  inferRouterOutputs<AppRouter>["membership"]["getMany"]["items"];
+  inferRouterOutputs<AppRouter>["membership"]["getMany"];
+export type MembershipGetOne =
+  inferRouterOutputs<AppRouter>["membership"]["getOne"]
