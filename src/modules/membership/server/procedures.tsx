@@ -9,6 +9,9 @@ import { membershipFacility, membershipType, facility } from "@/db/schema"; // P
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { count, eq, getTableColumns, sql } from "drizzle-orm"; // Impor sql
 import { z } from "zod";
+import { membershipCreateSchema, updateMembershipSchema } from "../schema";
+import { Features } from "../types";
+import { TRPCError } from "@trpc/server";
 
 export const membershipRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -17,19 +20,24 @@ export const membershipRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const data = await db
-        .select({
-          ...getTableColumns(membershipType),
-          facilities: sql`json_agg(${facility})`.as("facilities"),
-        })
-        .from(membershipType)
-        .leftJoin(
-          membershipFacility,
-          eq(membershipFacility.membershipTypeId, membershipType.id)
-        )
-        .leftJoin(facility, eq(membershipFacility.facilityId, facility.id))
-        .groupBy(membershipType.id);
+    .query(async ({ input }) => {
+      const data = await db.query.membershipType.findFirst({
+        where: eq(membershipType.id, input.id),
+        with: {
+          facilties: {
+            with: {
+              facility: true,
+            },
+          },
+        },
+      });
+
+      if (!data) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Membership not found",
+        });
+      }
 
       return data;
     }),
@@ -59,16 +67,13 @@ export const membershipRouter = createTRPCRouter({
           facilties: {
             with: {
               facility: true,
-            }
+            },
           },
         },
         limit: pageSize,
         offset: (page - 1) * pageSize,
+        orderBy: membershipType.createdAt,
       });
-
-      console.log(JSON.stringify(data, null, 2));
-
-
 
       const [total] = await db.select({ count: count() }).from(membershipType);
 
@@ -79,5 +84,90 @@ export const membershipRouter = createTRPCRouter({
         total: total.count,
         totalPages,
       };
+    }),
+
+  create: protectedProcedure
+    .input(membershipCreateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const membershipTypeData = {
+        name: input.name,
+        price: parseInt(input.price),
+        description: input.description,
+        active: input.active,
+        features: {
+          benefits: [input.benefits],
+          color: input.colors,
+        } as Features,
+        duration: 30,
+      };
+
+      const [dataCreate] = await db
+        .insert(membershipType)
+        .values(membershipTypeData)
+        .returning();
+
+      if (input.facilityAccess.length > 0) {
+        const facilityRelations = input.facilityAccess.map((facilityId) => ({
+          membershipTypeId: dataCreate.id,
+          facilityId,
+        }));
+        await db.insert(membershipFacility).values(facilityRelations);
+      }
+
+      return dataCreate;
+    }),
+
+  update: protectedProcedure
+    .input(updateMembershipSchema)
+    .mutation(async ({ input, ctx }) => {
+      const membershipTypeData = {
+        name: input.name,
+        price: parseInt(input.price),
+        description: input.description,
+        active: input.active,
+        features: {
+          benefits: [input.benefits],
+          color: input.colors,
+        } as Features,
+        duration: 30,
+      };
+
+      const [dataUpdate] = await db
+        .update(membershipType)
+        .set(membershipTypeData)
+        .where(eq(membershipType.id, input.id))
+        .returning();
+
+      await db
+        .delete(membershipFacility)
+        .where(eq(membershipFacility.membershipTypeId, input.id));
+
+      if (input.facilityAccess.length > 0) {
+        const facilityRelations = input.facilityAccess.map((facilityId) => ({
+          membershipTypeId: dataUpdate.id,
+          facilityId,
+        }));
+        await db.insert(membershipFacility).values(facilityRelations);
+      }
+
+      return dataUpdate;
+    }),
+
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const [removedData] = await db
+        .delete(membershipType)
+        .where(eq(membershipType.id, input.id))
+        .returning();
+
+      if (!removedData) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Membership not found",
+        });
+      }
+
+      return removedData;
     }),
 });

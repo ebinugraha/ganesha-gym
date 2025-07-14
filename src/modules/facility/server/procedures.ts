@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constant";
-import  db from "@/db";
+import db from "@/db";
 import { facility, membershipFacility } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
@@ -32,29 +32,11 @@ export const facilityRouter = createTRPCRouter({
       const data = await db
         .select()
         .from(facility)
-        .leftJoin(
-          membershipFacility,
-          eq(facility.id, membershipFacility.facilityId)
-        )
-        .leftJoin(
-          membershipFacility,
-          eq(membershipFacility.membershipTypeId, membershipType.id)
-        )
         .orderBy(asc(facility.createdAt))
         .limit(pageSize)
         .offset((page - 1) * pageSize);
 
-      const [total] = await db
-        .select({ count: count() })
-        .from(facility)
-        .leftJoin(
-          membershipFacility,
-          eq(facility.id, membershipFacility.facilityId)
-        )
-        .leftJoin(
-          membershipFacility,
-          eq(membershipFacility.membershipTypeId, membershipType.id)
-        );
+      const [total] = await db.select({ count: count() }).from(facility);
 
       const totalPages = Math.ceil(total.count / pageSize);
 
