@@ -28,7 +28,7 @@ export const DashboardNavbar = () => {
       <DashboardCommand open={isOpen} onOpenChange={setIsOpen} />
       <nav className="flex items-center w-full justify-between px-5 py-3 glass border-0 border-b text-white">
         <div className="flex flex-col">
-          {/* Breadcrumb */}
+          {/* Breadcrumb
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -41,7 +41,7 @@ export const DashboardNavbar = () => {
                 </BreadcrumbItem>
               ))}
             </BreadcrumbList>
-          </Breadcrumb>
+          </Breadcrumb> */}
           <span className="text-xs text-muted-foreground">
             welcome👋 • Admin
           </span>

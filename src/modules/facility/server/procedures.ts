@@ -7,6 +7,7 @@ import { asc, count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { MAX_PAGE_SIZE } from "../../../constant";
 import { membershipType } from "../../../db/schema";
+import { createFasilitySchema, updateFasilitySchema } from "../schema";
 
 export const facilityRouter = createTRPCRouter({
   getMany: protectedProcedure
@@ -29,12 +30,18 @@ export const facilityRouter = createTRPCRouter({
         search: actualInput.search,
       };
 
-      const data = await db
-        .select()
-        .from(facility)
-        .orderBy(asc(facility.createdAt))
-        .limit(pageSize)
-        .offset((page - 1) * pageSize);
+      const data = await db.query.facility.findMany({
+        with: {
+          membershipTypes: {
+            with: {
+              membershipType: true,
+            },
+          },
+        },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+        orderBy: membershipType.createdAt,
+      });
 
       const [total] = await db.select({ count: count() }).from(facility);
 
@@ -53,10 +60,16 @@ export const facilityRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const [data] = await db
-        .select()
-        .from(facility)
-        .where(eq(facility.id, input.id));
+      const data = await db.query.facility.findFirst({
+        where: eq(facility.id, input.id),
+        with: {
+          membershipTypes: {
+            with: {
+              membershipType: true,
+            },
+          },
+        },
+      });
 
       if (!data) {
         throw new TRPCError({
@@ -66,5 +79,53 @@ export const facilityRouter = createTRPCRouter({
       }
 
       return data;
+    }),
+
+  create: protectedProcedure
+    .input(createFasilitySchema)
+    .mutation(async ({ input, ctx }) => {
+      const [dataCreate] = await db.insert(facility).values(input).returning();
+      return dataCreate;
+    }),
+
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const [removedData] = await db
+        .delete(facility)
+        .where(eq(facility.id, input.id))
+        .returning();
+
+      if (!removedData) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Facility not found",
+        });
+      }
+
+      return removedData;
+    }),
+
+  update: protectedProcedure
+    .input(updateFasilitySchema)
+    .mutation(async ({ input, ctx }) => {
+      const { id, ...data } = input;
+      const [updatedFacility] = await db
+        .update(facility)
+        .set({
+          ...data,
+          updatedAt: new Date(),
+        })
+        .where(eq(facility.id, id))
+        .returning();
+
+      if (!updatedFacility) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Facility not found",
+        });
+      }
+
+      return updatedFacility;
     }),
 });

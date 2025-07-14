@@ -1,35 +1,20 @@
 "use client";
 import { DataTable } from "@/components/data-table";
-import { Payment, columns } from '../components/columns';
+import { columns } from "../components/columns";
 import { FacilitityFilters } from "../components/facility-filters";
 import { FacilityHeaders } from "../components/facility-headers";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
+import { useRouter } from "next/navigation";
 
-function getData(): Payment[] {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ]
-}
 
 export const FacilitiesView = () => {
+
+  const router = useRouter()
+
+  const trpc = useTRPC();
+  const { data } = useSuspenseQuery(trpc.facility.getMany.queryOptions({}));
+
   return (
     <div className="flex-1 flex-col flex text-white py-5 px-4 md:px-8 gap-y-5">
       <FacilityHeaders />
@@ -41,7 +26,7 @@ export const FacilitiesView = () => {
           </p>
         </div>
         <FacilitityFilters />
-        <DataTable columns={columns} data={getData()} />
+        <DataTable columns={columns} data={data.items} onRowClick={(row) => router.push(`/facilities/${row.id}`)}/>
       </div>
     </div>
   );
