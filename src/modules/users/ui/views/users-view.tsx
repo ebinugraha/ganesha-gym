@@ -22,8 +22,6 @@ export const UsersView = () => {
   const router = useRouter()
   const { data } = useSuspenseQuery(trpc.member.getMany.queryOptions());
 
-  console.log(data[0].memberships[0].membershipType.name);
-
   return (
     <>
       <div className="flex-1 flex-col flex text-white pb-4 py-5 px-4 md:px-8 gap-y-4">
