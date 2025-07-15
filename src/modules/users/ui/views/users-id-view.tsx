@@ -43,10 +43,23 @@ export const UserIdView = ({ userId }: Props) => {
 
   // const [updateAgentDialogOpen, setUpdateAgentDialogOpen] = useState(false);
 
-  const endDate = new Date(data.memberships[0].endDate);
-  const today = new Date();
-  const timeDiff = endDate.getTime() - today.getTime();
-  const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const endDateString = data.memberships?.[0]?.endDate;
+
+  const daysLeft = (() => {
+    if (!endDateString) {
+      return 0; // Atau "N/A", atau null, sesuai kebutuhan tampilan Anda
+    }
+    const endDate = new Date(endDateString);
+    const today = new Date();
+
+    // Jika sudah kedaluwarsa, tampilkan 0, bukan angka negatif
+    if (endDate < today) {
+      return 0;
+    }
+
+    const timeDiff = endDate.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  })();
 
   return (
     <>
