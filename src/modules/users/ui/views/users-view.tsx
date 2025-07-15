@@ -15,10 +15,14 @@ import { UserCard } from "../components/users-card";
 import { FiltersUsers } from "../components/users-filters";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export const UsersView = () => {
   const trpc = useTRPC();
+  const router = useRouter()
   const { data } = useSuspenseQuery(trpc.member.getMany.queryOptions());
+
+  console.log(data[0].memberships[0].membershipType.name);
 
   return (
     <>
@@ -53,19 +57,25 @@ export const UsersView = () => {
           {data.map((user) => (
             <UserCard
               key={user.id}
+              id={user.id}
+              onClick={(name) => router.push(`/users/${user.id}`)}
               name={user.name}
-              active={user.banned ? false : true}
+              active={
+                !!(
+                  user.memberships?.[0]?.endDate &&
+                  new Date(user.memberships[0].endDate) > new Date()
+                )
+              }
               email={user.email}
-              tipe={"VIP"}
               phoneNumber={user.phoneNumber ?? ""}
-              // buat format tanggal bergabung 19-03-2023
-              membership="Bulanan"
               tanggalBergabung={new Date(user.createdAt).toLocaleDateString(
                 "id-ID"
               )}
+              tipe={user.memberships?.[0]?.membershipType?.name ?? ""}
               totalPertemuan={5}
-              lokasi={"Bandung"}
               terakhirCheckIn={"4 hari"}
+              role={user.role ?? ""}
+              colorTipe={user.memberships?.[0]?.membershipType?.features.color ?? "#9298a4"}
             />
           ))}
         </div>

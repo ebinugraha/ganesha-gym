@@ -32,6 +32,10 @@ export const user = pgTable("user", {
   phoneNumberVerified: boolean("phone_number_verified"),
 });
 
+export const userRelations = relations(user, ({ many }) => ({
+  memberships: many(membership),
+}));
+
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -111,6 +115,17 @@ export const membership = pgTable("membership", {
   ),
 });
 
+export const membershipRelations = relations(membership, ({ one }) => ({
+  membershipType: one(membershipType, {
+    fields: [membership.membershipTypeId],
+    references: [membershipType.id],
+  }),
+  user: one(user, {
+    fields: [membership.userId],
+    references: [user.id],
+  }),
+}));
+
 export const membershipType = pgTable("membership_type", {
   id: text("id")
     .primaryKey()
@@ -133,6 +148,7 @@ export const membershipTypeRelation = relations(
   membershipType,
   ({ one, many }) => ({
     facilties: many(membershipFacility),
+    memberships: many(membership),
   })
 );
 

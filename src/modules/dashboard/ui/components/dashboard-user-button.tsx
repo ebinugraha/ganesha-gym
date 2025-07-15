@@ -39,7 +39,7 @@ export const DashboardUserButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-md border flex w-full gap-x-4 px-3 py-3 text-sm font-medium items-center justify-between overflow-hidden bg-gradient-to-r transition-colors from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30">
-        {data?.user.image ? (
+        {!!data?.user.image ? (
           <Avatar>
             <AvatarImage src={data.user.image} />
           </Avatar>

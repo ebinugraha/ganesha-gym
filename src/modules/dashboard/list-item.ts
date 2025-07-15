@@ -48,6 +48,6 @@ export const listItemNav = [
     label: "Laporan",
     href: "/reports",
     description: "Buat laporan gym dan member",
-    roles: ["admin", "user"],
+    roles: ["admin"],
   },
 ];
