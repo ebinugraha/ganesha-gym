@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const FiltersMembership = () => {
+
   return (
     <div className="w-full glass-card p-4 flex flex-col gap-y-2 items-center rounded-lg">
       <div className="w-full font-semibold text-white">Filter Membership</div>
