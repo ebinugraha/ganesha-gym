@@ -30,12 +30,8 @@ export const QRGenerator = ({ value, size = 200 }: QRGeneratorProps) => {
 
   return (
     <div className="flex flex-col items-center">
-      <canvas ref={canvasRef} width={size} height={size} />
+      <canvas ref={canvasRef} width={size} height={size} className="rounded-lg"/>
       {error && <p className="text-red-500 mt-2">{error}</p>}
-      <div className="mt-4 bg-gray-100 p-3 rounded-md break-all max-w-xs">
-        <p className="text-sm font-medium">ID Anggota:</p>
-        <p className="text-xs">{value}</p>
-      </div>
     </div>
   );
 };

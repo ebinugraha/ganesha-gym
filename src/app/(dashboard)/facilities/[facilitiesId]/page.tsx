@@ -13,6 +13,14 @@ interface Props {
 }
 
 const FacilitiesIdPage = async ({ params }: Props) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   const { facilitiesId } = await params;
 
   const queryClient = getQueryClient();

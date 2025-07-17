@@ -5,20 +5,19 @@ import { useState } from "react";
 import { set } from "zod";
 
 export const FacilityHeaders = () => {
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <>
-    <FacilityNewDialog onOpenChange={setIsDialogOpen} open={isDialogOpen} />
+      <FacilityNewDialog onOpenChange={setIsDialogOpen} open={isDialogOpen} />
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-1">
           <h1 className="text-xl font-semibold text-white">
             Manajemen Fasilitas
           </h1>
           <p className="text-sm text-muted-foreground">
-            Kelola fasilitas gym, membership types, dan monitor penggunaan secara
-            real-time
+            Kelola fasilitas gym, membership types, dan monitor penggunaan
+            secara real-time
           </p>
         </div>
         <div className="flex items-center gap-x-2">

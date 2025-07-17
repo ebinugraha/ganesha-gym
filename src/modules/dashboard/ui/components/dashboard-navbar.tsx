@@ -43,7 +43,7 @@ export const DashboardNavbar = () => {
             </BreadcrumbList>
           </Breadcrumb> */}
           <span className="text-xs text-muted-foreground">
-            welcome👋 • Admin
+            welcome👋 
           </span>
         </div>
         <Button
