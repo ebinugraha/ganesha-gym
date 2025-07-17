@@ -67,7 +67,7 @@ export const planRouter = createTRPCRouter({
       return newMembership;
     }),
 
-  membershipActive: protectedProcedure.query(async ({ ctx, input }) => {
+  membershipActive: protectedProcedure.query(async ({ ctx }) => {
     const activeMembership = await db.query.membership.findFirst({
       where: and(
         eq(membership.userId, ctx.auth.user.id),

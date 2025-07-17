@@ -20,7 +20,7 @@ export const FacilityUpdateDialog = ({ open, onOpenChange, initials }: Props) =>
       description="Fasilitas akan berubah di daftar"
     >
       <FacilityForm
-        onSuccess={(id) => {
+        onSuccess={() => {
           onOpenChange(false);
           router.push("/facilities");
         }}

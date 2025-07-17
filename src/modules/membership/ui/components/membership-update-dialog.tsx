@@ -1,7 +1,6 @@
 "use client";
 
 import { DialogForm } from "@/components/dialog-form";
-import { useRouter } from "next/navigation";
 import { MembershipForm } from "./membership-form";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +30,7 @@ export const MembershipUpdateDialog = ({ open, onOpenChange, id }: Props) => {
           description="Membership akan di ubah dalam daftar"
         >
           <MembershipForm
-            onSuccess={(id) => {
+            onSuccess={() => {
               onOpenChange(false);
             }}
             onCancel={() => {

@@ -1,16 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
   Activity,
-  Barcode,
   Clock,
-  DoorOpen,
   Loader2,
   LogOut,
   QrCode,
-  ScanBarcode,
   UserCheck,
   UserX,
-  X,
   XCircle,
 } from "lucide-react";
 import { GetUserCheckInStatusTypes } from "../../types";
@@ -33,7 +29,7 @@ function formatTime(dateString: string): string {
   return format(date, "HH.mm");
 }
 
-export const CheckInStatusUser = ({ onCheckin, values, onCheckout }: Props) => {
+export const CheckInStatusUser = ({ values, onCheckout }: Props) => {
   const trpc = useTRPC();
 
   const [isOpenDialoCheckIn, setIsOpenDialogCheckIn] = useState(false);
@@ -51,9 +47,9 @@ export const CheckInStatusUser = ({ onCheckin, values, onCheckout }: Props) => {
       <CheckInDialogQr
         open={isOpenDialoCheckIn}
         onOpenChange={setIsOpenDialogCheckIn}
-        id={data?.user.id!}
-        name={data?.user.name!}
-        email={data?.user.email!}
+        id={data?.user.id ?? ""}
+        name={data?.user.name ?? ""}
+        email={data?.user.email ?? ""}
       />
       <div className="flex glass flex-col gap-y-5 text-white p-5 rounded-lg">
         <div className="flex gap-x-4 items-center">
@@ -110,7 +106,7 @@ export const CheckInStatusUser = ({ onCheckin, values, onCheckout }: Props) => {
               <Button
                 className="w-full"
                 variant={"destructive"}
-                onClick={() => onCheckout?.(data?.user.id!)}
+                onClick={() => onCheckout?.(data?.user.id ?? "")}
               >
                 <LogOut />
                 Checkout

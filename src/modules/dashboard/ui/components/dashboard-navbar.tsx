@@ -1,47 +1,18 @@
 "use client";
-
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { DashboardCommand } from "./dashboard-command";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 
 export const DashboardNavbar = () => {
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
-  const pathParts = pathname.split("/");
-
-  const firstPart = pathParts[1] || "Dashboard";
 
   return (
     <>
       <DashboardCommand open={isOpen} onOpenChange={setIsOpen} />
       <nav className="flex items-center w-full justify-between px-5 py-3 glass border-0 border-b text-white">
         <div className="flex flex-col">
-          {/* Breadcrumb
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink className="text-white font-medium" href="/dashboard">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              {pathParts.slice(2).map((part, index) => (
-                <BreadcrumbItem key={index}>
-                  <BreadcrumbSeparator>/</BreadcrumbSeparator>
-                  <BreadcrumbPage>{part}</BreadcrumbPage>
-                </BreadcrumbItem>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb> */}
           <span className="text-xs text-muted-foreground">
             welcome👋 
           </span>

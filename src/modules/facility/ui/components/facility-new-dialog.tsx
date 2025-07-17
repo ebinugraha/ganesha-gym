@@ -1,5 +1,4 @@
 import { DialogForm } from "@/components/dialog-form";
-import { useRouter } from "next/navigation";
 import { FacilityForm } from "./facility-form";
 
 interface Props {
@@ -17,7 +16,7 @@ export const FacilityNewDialog = ({ open, onOpenChange }: Props) => {
       description="Membership akan tampil di daftar"
     >
       <FacilityForm
-        onSuccess={(id) => {
+        onSuccess={() => {
           onOpenChange(false);
         }}
         onCancel={() => {

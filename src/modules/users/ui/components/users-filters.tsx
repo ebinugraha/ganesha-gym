@@ -1,4 +1,4 @@
-import { ChevronDown, CircleX, SearchIcon, Users } from "lucide-react";
+import { ChevronDown, CircleX, SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,

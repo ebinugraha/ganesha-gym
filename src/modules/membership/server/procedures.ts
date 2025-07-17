@@ -5,9 +5,9 @@ import {
   MIN_PAGE_SIZE,
 } from "@/constant";
 import db from "@/db";
-import { membershipFacility, membershipType, facility } from "@/db/schema"; // Pastikan facility diimpor
+import { membershipFacility, membershipType } from "@/db/schema"; // Pastikan facility diimpor
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { count, eq, getTableColumns, sql } from "drizzle-orm"; // Impor sql
+import { count, eq } from "drizzle-orm"; // Impor sql
 import { z } from "zod";
 import { membershipCreateSchema, updateMembershipSchema } from "../schema";
 import { Features } from "../types";
@@ -53,13 +53,12 @@ export const membershipRouter = createTRPCRouter({
         search: z.string().nullish(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const actualInput = input || {};
 
-      const { page, pageSize, search } = {
+      const { page, pageSize } = {
         page: actualInput.page ?? DEFAULT_PAGE,
         pageSize: actualInput.pageSize ?? DEFAULT_PAGE_SIZE,
-        search: actualInput.search,
       };
 
       const data = await db.query.membershipType.findMany({
@@ -88,7 +87,7 @@ export const membershipRouter = createTRPCRouter({
 
   create: protectedProcedure
     .input(membershipCreateSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const membershipTypeData = {
         name: input.name,
         price: parseInt(input.price),
@@ -119,7 +118,7 @@ export const membershipRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(updateMembershipSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const membershipTypeData = {
         name: input.name,
         price: parseInt(input.price),
@@ -155,7 +154,7 @@ export const membershipRouter = createTRPCRouter({
 
   remove: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const [removedData] = await db
         .delete(membershipType)
         .where(eq(membershipType.id, input.id))

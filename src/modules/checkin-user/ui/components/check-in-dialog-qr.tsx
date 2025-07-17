@@ -15,7 +15,6 @@ export const CheckInDialogQr = ({
   onOpenChange,
   id,
   name,
-  email,
 }: Props) => {
   return (
     <DialogForm

@@ -2,11 +2,8 @@
 
 import { useTRPC } from "@/trpc/client";
 import {
-  useMutation,
-  useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import {
   Calendar,
@@ -16,11 +13,7 @@ import {
   DoorOpen,
   UserLock,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useConfirm } from "@/hooks/use-confirm";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { GenerateAvatar } from "@/components/generate-avatar";
 import { Separator } from "@/components/ui/separator";
@@ -31,9 +24,7 @@ interface Props {
 }
 
 export const UserIdView = ({ userId }: Props) => {
-  const router = useRouter();
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
 
   const { data } = useSuspenseQuery(
     trpc.member.getOne.queryOptions({

@@ -2,8 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { Activity, Calendar, Clock, Crown } from "lucide-react";
-import { CheckInHistory, GetAllCheckInHistory } from "../../../checkin/types";
+import { Activity, Clock } from "lucide-react";
+import { GetAllCheckInHistory } from "../../../checkin/types";
 import { format } from "date-fns";
 
 function formatTime(dateString: string): string {
@@ -38,7 +38,7 @@ export const columns: ColumnDef<GetAllCheckInHistory>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
+    cell: () => (
       <div className="flex text-xs text-muted-foreground">
         <Badge>Check-in</Badge>
       </div>

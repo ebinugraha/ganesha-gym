@@ -79,8 +79,6 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
     })
   );
 
-  const isEdit = !!initials;
-
   const onSubmit = (values: z.infer<typeof membershipCreateSchema>) => {
     if (initials) {
       updateMembership.mutate({

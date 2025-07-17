@@ -1,11 +1,10 @@
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { z } from "zod";
-import { startOfDay, endOfDay, subDays } from "date-fns";
+import { startOfDay, endOfDay } from "date-fns";
 import db from "@/db";
-import { and, asc, desc, eq, gte, isNull, lt } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lt } from "drizzle-orm";
 import { checkIn, user } from "@/db/schema";
 import { TRPCError } from "@trpc/server";
-import { membership } from "../../../db/schema";
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE,
@@ -20,7 +19,7 @@ export const checkinRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const now = new Date();
 
       const todayStart = startOfDay(now);
@@ -59,10 +58,8 @@ export const checkinRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const now = new Date();
-      const todayStart = startOfDay(now);
-      const todayEnd = endOfDay(now);
 
       const existingCheckin = await db.query.checkIn.findFirst({
         where: and(eq(checkIn.userId, input.id), isNull(checkIn.checkOutTime)),
@@ -98,10 +95,7 @@ export const checkinRouter = createTRPCRouter({
         search: z.string().nullish(),
       })
     )
-    .query(async ({ input, ctx }) => {
-      const now = new Date();
-      const todayStart = startOfDay(now);
-      const todayEnd = endOfDay(now);
+    .query(async ({}) => {
 
       const userCheckIn = await db
         .select({

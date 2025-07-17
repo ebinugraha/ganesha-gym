@@ -1,9 +1,9 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constant";
 import db from "@/db";
-import { facility, membershipFacility } from "@/db/schema";
+import { facility } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { asc, count, eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { MAX_PAGE_SIZE } from "../../../constant";
 import { membershipType } from "../../../db/schema";
@@ -22,12 +22,11 @@ export const facilityRouter = createTRPCRouter({
         search: z.string().nullish(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const actualInput = input || {};
-      const { page, pageSize, search } = {
+      const { page, pageSize } = {
         page: actualInput.page ?? DEFAULT_PAGE,
         pageSize: actualInput.pageSize ?? DEFAULT_PAGE_SIZE,
-        search: actualInput.search,
       };
 
       const data = await db.query.facility.findMany({
@@ -59,7 +58,7 @@ export const facilityRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const data = await db.query.facility.findFirst({
         where: eq(facility.id, input.id),
         with: {
@@ -83,14 +82,14 @@ export const facilityRouter = createTRPCRouter({
 
   create: protectedProcedure
     .input(createFasilitySchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const [dataCreate] = await db.insert(facility).values(input).returning();
       return dataCreate;
     }),
 
   remove: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const [removedData] = await db
         .delete(facility)
         .where(eq(facility.id, input.id))
@@ -108,7 +107,7 @@ export const facilityRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(updateFasilitySchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { id, ...data } = input;
       const [updatedFacility] = await db
         .update(facility)

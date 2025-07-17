@@ -1,8 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Download, Pencil, Plus, Trash2Icon } from "lucide-react";
-import { FacilityNewDialog } from "./facility-new-dialog";
-import { useState } from "react";
-import { set } from "zod";
+import { Pencil, Trash2Icon } from "lucide-react";
 
 interface Props {
     onEdit: () => void;
@@ -10,7 +7,6 @@ interface Props {
 }
 
 export const FacilityIdHeaders = ({onRemove, onEdit}: Props) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <>

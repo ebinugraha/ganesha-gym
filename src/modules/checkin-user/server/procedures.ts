@@ -3,7 +3,6 @@ import { checkIn, user } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { endOfDay, startOfDay } from "date-fns";
 import { and, eq, gte, isNull, lt } from "drizzle-orm";
-import { z } from "zod";
 
 export const checkInUserRouter = createTRPCRouter({
   getUserCheckInStatus: protectedProcedure.query(async ({ ctx }) => {

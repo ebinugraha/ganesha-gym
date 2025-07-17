@@ -1,8 +1,7 @@
-import { Badge, CircleCheckBig, Crown, Edit, Trash } from "lucide-react";
+import { CircleCheckBig, Crown, Edit, Trash } from "lucide-react";
 
 import { Badge as BadgeComponent } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MembershipGetOne } from "../../types";
 
 interface Props {
   id: string;
