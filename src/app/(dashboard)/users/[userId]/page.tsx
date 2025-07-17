@@ -1,4 +1,3 @@
-import { FacilitiyIdView } from "@/modules/facility/ui/views/facilities-id-view";
 import { UserIdView } from "@/modules/users/ui/views/users-id-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

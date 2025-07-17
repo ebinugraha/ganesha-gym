@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Download, Plus, QrCode } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { useState } from "react";
-import { set } from "zod";
 import { CheckInDialog } from "./checkin-dialog";
 
 export const CheckinHeaders = () => {

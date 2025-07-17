@@ -1,16 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Crown, Download, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Crown, Download } from "lucide-react";
 import { useState } from "react";
 import { MembershipNewDialog } from "./membership-new-dialog";
-import { MembershipGetMany, MembershipGetOne } from "../../types";
+import { MembershipGetMany,  } from "../../types";
 
 interface Props {
   data: MembershipGetMany;
 }
 
 export const MembershipHeaders = ({ data }: Props) => {
-  const router = useRouter();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const exportMembershipData = () => {

@@ -21,7 +21,7 @@ export const CheckInMember = () => {
       onError: (error) => {
         toast.error(error.message);
       },
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.checkin.activeCheckIn.queryOptions({})
         );

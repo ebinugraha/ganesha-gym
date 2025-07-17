@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 export const DashboardUserButton = () => {
   const router = useRouter();
-  const { data, isPending } = authClient.useSession();
+  const { data } = authClient.useSession();
 
   if (!data || !data.user) {
     return <Skeleton className="h-15 w-full rounded-md" />;

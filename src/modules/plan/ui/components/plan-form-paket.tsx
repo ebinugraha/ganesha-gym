@@ -5,12 +5,10 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { authClient } from "@/lib/auth-client";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +26,7 @@ interface Props {
   id?: string;
 }
 
-export const FormPlan = ({ id }: Props) => {
+export const FormPlan = ({ }: Props) => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const user = authClient.useSession();
@@ -51,7 +49,7 @@ export const FormPlan = ({ id }: Props) => {
 
   const createPayment = useMutation(
     trpc.plan.processPayments.mutationOptions({
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.plan.membershipActive.queryOptions()
         );

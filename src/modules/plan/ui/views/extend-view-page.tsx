@@ -1,16 +1,14 @@
 "use client";
 
-import { Calendar, CreditCard, Crown, Package } from "lucide-react";
+import { Calendar, Package } from "lucide-react";
 import { PlanHeaders } from "../components/plan-header";
 import { Badge } from "@/components/ui/badge";
 import { FormPlan } from "../components/plan-form-paket";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
-import { authClient } from "@/lib/auth-client";
 
 export const ExtendViewPage = () => {
   const trpc = useTRPC();
-  const user = authClient.useSession();
 
   const { data } = useSuspenseQuery(trpc.plan.membershipActive.queryOptions());
 

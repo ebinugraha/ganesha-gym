@@ -2,15 +2,8 @@
 
 import { InfoCard } from "@/components/info-card";
 import { UsersHeaders } from "../components/users-headers";
-import { SearchIcon, UserCheck, UserPlus, Users } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { UserCheck, UserPlus, Users } from "lucide-react";
+
 import { UserCard } from "../components/users-card";
 import { FiltersUsers } from "../components/users-filters";
 import { useTRPC } from "@/trpc/client";
@@ -19,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export const UsersView = () => {
   const trpc = useTRPC();
-  const router = useRouter()
+  const router = useRouter();
   const { data } = useSuspenseQuery(trpc.member.getMany.queryOptions());
 
   return (
@@ -56,7 +49,7 @@ export const UsersView = () => {
             <UserCard
               key={user.id}
               id={user.id}
-              onClick={(name) => router.push(`/users/${user.id}`)}
+              onClick={() => router.push(`/users/${user.id}`)}
               name={user.name}
               active={
                 !!(
@@ -73,7 +66,10 @@ export const UsersView = () => {
               totalPertemuan={5}
               terakhirCheckIn={"4 hari"}
               role={user.role ?? ""}
-              colorTipe={user.memberships?.[0]?.membershipType?.features.color ?? "#9298a4"}
+              colorTipe={
+                user.memberships?.[0]?.membershipType?.features.color ??
+                "#9298a4"
+              }
             />
           ))}
         </div>

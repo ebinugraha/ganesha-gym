@@ -4,14 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card"; // CardFooter was imported but not used
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  MoreVertical,
-  Phone,
-  UserLock,
-} from "lucide-react";
+import { Calendar, Clock, UserLock } from "lucide-react";
 
 // ---
 // Interfaces
@@ -30,7 +23,7 @@ interface UserCardProps {
   lokasi?: string;
   terakhirCheckIn?: string;
   role?: string;
-  onClick: (id: string) => void
+  onClick: (id: string) => void;
   colorTipe?: string;
 }
 
@@ -43,14 +36,16 @@ export const UserCard = ({
   tipe,
   role,
   colorTipe,
-  membership,
   tanggalBergabung,
   onClick,
   totalPertemuan = 0,
   terakhirCheckIn,
 }: UserCardProps) => {
   return (
-    <Card onClick={() => onClick(id)} className="flex cursor-pointer flex-col p-4 glass-card text-white hover:border-gray-500 overflow-hidden transition-colors duration-300">
+    <Card
+      onClick={() => onClick(id)}
+      className="flex cursor-pointer flex-col p-4 glass-card text-white hover:border-gray-500 overflow-hidden transition-colors duration-300"
+    >
       <CardHeader className="flex items-center justify-between w-full p-0">
         <div className="flex gap-x-4 items-center">
           {image ? (

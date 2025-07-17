@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { BrowserQRCodeReader } from "@zxing/browser";
 import { Button } from "./ui/button";
 import { Scan } from "lucide-react";
-import { toast } from "sonner";
 
 interface QRScannerProps {
   onResult: (result: string) => void;
@@ -20,7 +19,7 @@ export const QRScanner = ({ onResult, onError }: QRScannerProps) => {
     if (!isScanning) return;
 
     const codeReader = new BrowserQRCodeReader();
-    let active = true;
+
 
     const scan = async () => {
       try {
@@ -29,7 +28,7 @@ export const QRScanner = ({ onResult, onError }: QRScannerProps) => {
         const result = await codeReader.decodeFromVideoDevice(
           undefined,
           videoRef.current,
-          (result, error) => {
+          (result) => {
             if (result) {
               onResult(result.getText());
               setIsScanning(false);
@@ -38,7 +37,6 @@ export const QRScanner = ({ onResult, onError }: QRScannerProps) => {
         );
 
         return () => {
-          active = false;
           result?.stop();
         };
       } catch (err) {
@@ -50,7 +48,6 @@ export const QRScanner = ({ onResult, onError }: QRScannerProps) => {
     scan();
 
     return () => {
-      active = false;
     };
   }, [isScanning, onResult, onError]);
 

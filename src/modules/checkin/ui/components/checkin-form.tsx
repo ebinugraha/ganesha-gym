@@ -44,7 +44,7 @@ export const CheckInForm = ({ onSuccess, onCancel }: Props) => {
 
   const checkIn = useMutation(
     trpc.checkin.checkInUser.mutationOptions({
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         await queryClient
           .invalidateQueries
           // trpc.checkin.getCheckIn.queryOptions({})

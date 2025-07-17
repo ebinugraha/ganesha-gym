@@ -12,7 +12,6 @@ import {
 import { toast } from "sonner";
 import { DataTable } from "@/components/data-table";
 import { columns } from "@/modules/checkin-user/ui/components/checkin-column";
-import { CheckInHistory } from "../../../checkin/types";
 
 export const CheckInUserView = () => {
   const trpc = useTRPC();
@@ -24,7 +23,7 @@ export const CheckInUserView = () => {
 
   const checkout = useMutation(
     trpc.checkin.checkOut.mutationOptions({
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries();
         toast.success(`Checkout berhasil`);
       },

@@ -188,7 +188,7 @@ export const membershipType = pgTable("membership_type", {
 
 export const membershipTypeRelation = relations(
   membershipType,
-  ({ one, many }) => ({
+  ({ many }) => ({
     facilties: many(membershipFacility),
     memberships: many(membership),
   })
