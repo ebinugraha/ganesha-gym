@@ -34,6 +34,8 @@ export const user = pgTable("user", {
 
 export const userRelations = relations(user, ({ many }) => ({
   memberships: many(membership),
+  checkIns: many(checkIn),
+  payments: many(payments),
 }));
 
 export const session = pgTable("session", {
@@ -95,6 +97,13 @@ export const checkIn = pgTable("check_in", {
   ),
 });
 
+export const checkInRelations = relations(checkIn, ({ one }) => ({
+  user: one(user, {
+    fields: [checkIn.userId],
+    references: [user.id],
+  }),
+}));
+
 export const membership = pgTable("membership", {
   id: text("id")
     .primaryKey()
@@ -115,7 +124,39 @@ export const membership = pgTable("membership", {
   ),
 });
 
-export const membershipRelations = relations(membership, ({ one }) => ({
+export const payments = pgTable("payments", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  membershipId: text("membership_id")
+    .notNull()
+    .references(() => membership.id, { onDelete: "cascade" }),
+  amount: integer("amount").notNull(),
+  paymentDate: timestamp("payment_date").notNull(),
+  paymentStatus: text("payment_status").notNull(),
+  createdAt: timestamp("created_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+  updatedAt: timestamp("updated_at").$defaultFn(
+    () => /* @__PURE__ */ new Date()
+  ),
+});
+
+export const paymentRelation = relations(payments, ({ one }) => ({
+  user: one(user, {
+    fields: [payments.userId],
+    references: [user.id],
+  }),
+  membership: one(membership, {
+    fields: [payments.membershipId],
+    references: [membership.id],
+  }),
+}));
+
+export const membershipRelations = relations(membership, ({ one, many }) => ({
   membershipType: one(membershipType, {
     fields: [membership.membershipTypeId],
     references: [membershipType.id],
@@ -124,6 +165,7 @@ export const membershipRelations = relations(membership, ({ one }) => ({
     fields: [membership.userId],
     references: [user.id],
   }),
+  payments: many(payments),
 }));
 
 export const membershipType = pgTable("membership_type", {

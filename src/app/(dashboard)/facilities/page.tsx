@@ -1,9 +1,20 @@
+import { auth } from "@/lib/auth";
 import { FacilitiesView } from "@/modules/facility/ui/views/facilities";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-const FacilityPage = () => {
+const FacilityPage = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   const queryClient = getQueryClient();
 
   void queryClient.prefetchQuery(trpc.facility.getMany.queryOptions({}));

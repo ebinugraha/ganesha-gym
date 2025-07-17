@@ -1,12 +1,12 @@
 import { auth } from "@/lib/auth";
-import { MembershipViews } from "@/modules/membership/ui/views/membership-views";
+import { CheckInUserView } from "@/modules/checkin-user/ui/views/check-in-user-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-const MembershipPage = async () => {
+const CheckInPageUser = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -17,15 +17,17 @@ const MembershipPage = async () => {
 
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(trpc.membership.getMany.queryOptions({}));
+  void queryClient.prefetchQuery(
+    trpc.checkInUser.getUserCheckInStatus.queryOptions()
+  );
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<p className="text-white">loading...</p>}>
-        <MembershipViews />
+      <Suspense fallback={<p className="text-white">Loading...</p>}>
+        <CheckInUserView />
       </Suspense>
     </HydrationBoundary>
   );
 };
 
-export default MembershipPage;
+export default CheckInPageUser;

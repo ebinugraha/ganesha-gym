@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Download, Plus, QrCode } from "lucide-react";
 import { useState } from "react";
 import { set } from "zod";
+import { CheckInDialog } from "./checkin-dialog";
 
 export const CheckinHeaders = () => {
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <>
+      <CheckInDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-y-1">
           <h1 className="text-xl font-semibold text-white">
@@ -19,11 +20,14 @@ export const CheckinHeaders = () => {
           </p>
         </div>
         <div className="flex items-center gap-x-2">
-          <Button size={"sm"} variant={"green"}>
+          <Button
+            size={"sm"}
+            variant={"green"}
+            onClick={() => setIsDialogOpen((open) => !open)}
+          >
             <QrCode className="mr-2" />
             Check-in
           </Button>
-          
         </div>
       </div>
     </>

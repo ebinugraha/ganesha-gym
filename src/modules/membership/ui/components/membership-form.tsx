@@ -32,9 +32,6 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
   const trpc = useTRPC();
   const queryCLient = useQueryClient();
 
-  if (initials) {
-    console.log(initials);
-  }
 
   const form = useForm<z.infer<typeof membershipCreateSchema>>({
     resolver: zodResolver(membershipCreateSchema),

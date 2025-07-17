@@ -37,10 +37,6 @@ export const FacilityForm = ({ onSuccess, onCancel, initials }: Props) => {
   const trpc = useTRPC();
   const queryCLient = useQueryClient();
 
-  if (initials) {
-    console.log(initials);
-  }
-
   const form = useForm<z.infer<typeof createFasilitySchema>>({
     resolver: zodResolver(createFasilitySchema),
     defaultValues: {
