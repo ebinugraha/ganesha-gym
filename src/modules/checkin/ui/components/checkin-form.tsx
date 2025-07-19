@@ -60,6 +60,7 @@ export const CheckInForm = ({ onSuccess, onCancel }: Props) => {
   );
 
   const handleResult = (result: string) => {
+    toast.success("Scan QR berhasil")
     form.setValue("id", result, {
       shouldValidate: true,
       shouldDirty: true,

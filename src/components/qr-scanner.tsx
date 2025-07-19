@@ -14,40 +14,76 @@ export const QRScanner = ({ onResult, onError }: QRScannerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // 1. Simpan objek kontrol pemindaian
+  const controlsRef = useRef<ReturnType<BrowserQRCodeReader['decodeFromVideoDevice']> | null>(null);
 
   useEffect(() => {
     if (!isScanning) return;
 
     const codeReader = new BrowserQRCodeReader();
-
+    let isActive = true;
 
     const scan = async () => {
       try {
         if (!videoRef.current) return;
 
-        const result = await codeReader.decodeFromVideoDevice(
+        // 2. Hentikan pemindaian sebelumnya jika ada
+        if (controlsRef.current) {
+          const previousControls = await controlsRef.current;
+          previousControls?.stop();
+        }
+
+        // 3. Simpan promise kontrol pemindaian
+        controlsRef.current = codeReader.decodeFromVideoDevice(
           undefined,
           videoRef.current,
           (result) => {
-            if (result) {
+            if (result && isActive) {
               onResult(result.getText());
               setIsScanning(false);
             }
           }
         );
 
-        return () => {
-          result?.stop();
-        };
+        // 4. Tambahkan penanganan error
+        controlsRef.current.catch((err) => {
+          if (isActive) {
+            setError("Failed to access camera");
+            console.error(err);
+            if (onError) onError(err);
+          }
+        });
+
       } catch (err) {
-        setError("Failed to access camera");
-        console.error(err);
+        if (isActive) {
+          setError("Failed to start scanning");
+          console.error(err);
+          if (onError) onError(err as Error);
+        }
       }
     };
 
     scan();
 
+    // 5. Fungsi cleanup yang benar
     return () => {
+      isActive = false;
+      
+      // Hentikan pemindaian saat unmount/scan dihentikan
+      if (controlsRef.current) {
+        controlsRef.current.then(controls => {
+          controls?.stop();
+          
+          // Hentikan stream video
+          if (videoRef.current?.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+          }
+        });
+        controlsRef.current = null;
+      }
     };
   }, [isScanning, onResult, onError]);
 
