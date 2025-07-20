@@ -11,7 +11,7 @@ import Link from "next/link";
 export const DashboardUserView = () => {
   const trpc = useTRPC();
 
-  const { data, isPending } = useQuery(
+  const { data } = useQuery(
     trpc.plan.membershipActive.queryOptions()
   );
 
