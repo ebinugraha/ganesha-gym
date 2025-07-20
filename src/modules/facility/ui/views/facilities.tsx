@@ -7,7 +7,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 
-
 export const FacilitiesView = () => {
 
   const router = useRouter()
