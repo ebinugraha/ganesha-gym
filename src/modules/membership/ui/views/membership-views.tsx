@@ -2,7 +2,6 @@
 
 import { useTRPC } from "@/trpc/client";
 import { MembershipCard } from "../components/membership-card";
-import { FiltersMembership } from "../components/membership-filters";
 import { MembershipHeaders } from "../components/membership-headers";
 import {
   useMutation,
@@ -68,8 +67,6 @@ export const MembershipViews = () => {
       <div className="flex-1 flex-col flex text-white py-5 px-4 md:px-8 gap-y-5">
         {/* Headers */}
         <MembershipHeaders data={data} />
-        {/* Content */}
-        <FiltersMembership />
         <div className="grid grid-cols-3 gap-4">
           {data.items.map((item) => (
             <MembershipCard

@@ -7,6 +7,7 @@ import { checkinRouter } from "@/modules/checkin/server/procedures";
 import { checkInUserRouter } from "@/modules/checkin-user/server/procedures";
 import { planRouter } from "@/modules/plan/server/procedures";
 import { dashboardRouter } from "@/modules/dashboard/server/procedures";
+import { ReportRouter } from "@/modules/report/server/procedures";
 export const appRouter = createTRPCRouter({
   member: memberRouter,
   facility: facilityRouter,
@@ -14,7 +15,8 @@ export const appRouter = createTRPCRouter({
   checkin: checkinRouter,
   checkInUser: checkInUserRouter,
   plan: planRouter,
-  dashboard: dashboardRouter
+  dashboard: dashboardRouter,
+  report: ReportRouter
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

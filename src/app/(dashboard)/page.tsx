@@ -2,10 +2,7 @@ import { auth } from "@/lib/auth";
 import { DashboardUserView } from "@/modules/dashboard/ui/views/dashboard-user-view";
 import { DashboardView } from "@/modules/dashboard/ui/views/dashboard-view";
 import { getQueryClient, trpc } from "@/trpc/server";
-import {
-  dehydrate,
-  HydrationBoundary,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -25,12 +22,12 @@ const UserPage = async () => {
     trpc.dashboard.getRecentActivity.queryOptions()
   );
 
-  if(session.user.role === "user"){
+  if (session.user.role === "user") {
     return (
       <div>
-        <DashboardUserView/>
+        <DashboardUserView />
       </div>
-    )
+    );
   }
 
   return (

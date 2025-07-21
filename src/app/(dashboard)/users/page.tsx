@@ -6,8 +6,17 @@ import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SearchParams } from "nuqs";
+import { loadsearchParams } from "@/modules/users/search-params";
+import { UsersHeaders } from "@/modules/users/ui/components/users-headers";
 
-const UsersPage = async () => {
+interface UsersProps {
+  searchParams: Promise<SearchParams>;
+}
+
+const UsersPage = async ({ searchParams }: UsersProps) => {
+  const filters = await loadsearchParams(searchParams);
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -19,14 +28,23 @@ const UsersPage = async () => {
   // prefetchUsers
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(trpc.member.getMany.queryOptions());
+  void queryClient.prefetchQuery(
+    trpc.member.getMany.queryOptions({
+      ...filters,
+    })
+  );
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<p className="text-white">loading...</p>}>
-        <UsersView />
-      </Suspense>
-    </HydrationBoundary>
+    <>
+      <div className="flex-1 flex-col flex text-white pb-4 py-5 px-4 md:px-8 gap-y-4">
+        <UsersHeaders />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <Suspense fallback={<p className="text-white">loading...</p>}>
+            <UsersView />
+          </Suspense>
+        </HydrationBoundary>
+      </div>
+    </>
   );
 };
 

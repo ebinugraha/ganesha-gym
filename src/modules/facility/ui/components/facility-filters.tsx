@@ -15,7 +15,7 @@ export const FacilitityFilters = () => {
         <div className="relative">
           <Input
             type="email"
-            placeholder="Cari member"
+            placeholder="Cari Fasilitas"
             className="glass border-white/20 text-white placeholder:text-gray-400 h-9 pl-8"
           />
           <SearchIcon className="size-4 absolute left-2 top-1/2 text-muted-foreground -translate-y-1/2" />
