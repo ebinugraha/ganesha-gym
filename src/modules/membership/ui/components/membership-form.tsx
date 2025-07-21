@@ -107,6 +107,7 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage/>
               </FormItem>
             )}
           />
@@ -141,6 +142,7 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage/>
             </FormItem>
           )}
         />
@@ -164,7 +166,7 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
         <div className="space-y-3">
           <Label>AKses Fasilitas</Label>
           <p className="text-xs text-muted-foreground">
-            Pilih fasilitas yang dapat diakses dengan membership ini
+            Fasilitas belum ada ? Tambahkan fasilitas terlebih dahulu
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {facility.data &&
@@ -252,7 +254,7 @@ export const MembershipForm = ({ onSuccess, onCancel, initials }: Props) => {
             </Button>
           )}
           <Button type="submit" variant={"glass"}>
-            Tambah
+            {initials ? "Update" : "Tambah"}
           </Button>
         </div>
       </form>

@@ -95,7 +95,7 @@ export const CheckInForm = ({ onSuccess, onCancel }: Props) => {
           />
           {form.watch("id") !== "" && (
             <Button className="w-xs mx-auto mt-4" variant={"glass"}>
-              Simpan
+              Check-in
             </Button>
           )}
         </form>

@@ -97,7 +97,7 @@ export const FacilityForm = ({ onSuccess, onCancel, initials }: Props) => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Nama Membership</FormLabel>
+              <FormLabel className="text-xs">Nama Fasilitas</FormLabel>
               <FormControl>
                 <Input
                   className="glass border-white/20 text-white placeholder:text-gray-400"
